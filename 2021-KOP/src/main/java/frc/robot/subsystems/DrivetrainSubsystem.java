@@ -30,7 +30,6 @@ public class DrivetrainSubsystem extends SubsystemBase {
    * This can be reduced to cap the robot's maximum speed. Typically, this is useful during initial testing of the robot.
    */
   public static final double MAX_VOLTAGE = 12.0;
-  // FIXME Measure the drivetrain's maximum velocity or calculate the theoretical.
   //  The formula for calculating the theoretical maximum velocity is:
   //   <Motor free speed RPM> / 60 * <Drive reduction> * <Wheel diameter meters> * pi
   //  By default this value is setup for a Mk3 standard module using Falcon500s to drive.
@@ -67,9 +66,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
   // By default we use a Pigeon for our gyroscope. But if you use another gyroscope, like a NavX, you can change this.
   // The important thing about how you configure your gyroscope is that rotating the robot counter-clockwise should
   // cause the angle reading to increase until it wraps back over to zero.
-  // FIXME Remove if you are using a Pigeon
-  //private final PigeonIMU m_pigeon = new PigeonIMU(DRIVETRAIN_PIGEON_ID);
-  // FIXME Uncomment if you are using a NavX
+ 
+
   private final AHRS m_navx = new AHRS(Port.kUSB); // NavX connected over MXP
 
   // These are our modules. We initialize them in the constructor.
@@ -160,25 +158,18 @@ public class DrivetrainSubsystem extends SubsystemBase {
    * 'forwards' direction.
    */
   public void zeroGyroscope() {
-    // FIXME Remove if you are using a Pigeon
-    m_pigeon.setFusedHeading(0.0);
-
-    // FIXME Uncomment if you are using a NavX
-//    m_navx.zeroYaw();
+        m_navx.zeroYaw();
   }
 
   public Rotation2d getGyroscopeRotation() {
-    // FIXME Remove if you are using a Pigeon
-    return Rotation2d.fromDegrees(m_pigeon.getFusedHeading());
 
-    // FIXME Uncomment if you are using a NavX
-//    if (m_navx.isMagnetometerCalibrated()) {
-//      // We will only get valid fused headings if the magnetometer is calibrated
-//      return Rotation2d.fromDegrees(m_navx.getFusedHeading());
-//    }
-//
-//    // We have to invert the angle of the NavX so that rotating the robot counter-clockwise makes the angle increase.
-//    return Rotation2d.fromDegrees(360.0 - m_navx.getYaw());
+    if (m_navx.isMagnetometerCalibrated()) {
+      // We will only get valid fused headings if the magnetometer is calibrated
+      return Rotation2d.fromDegrees(m_navx.getFusedHeading());
+    }
+
+    // We have to invert the angle of the NavX so that rotating the robot counter-clockwise makes the angle increase.
+    return Rotation2d.fromDegrees(360.0 - m_navx.getYaw());
   }
 
   public void drive(ChassisSpeeds chassisSpeeds) {
