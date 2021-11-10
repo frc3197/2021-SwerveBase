@@ -41,7 +41,12 @@ public class RobotContainer {
             () -> -modifyAxis(m_controller.getX(GenericHID.Hand.kLeft)) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
             () -> -modifyAxis(m_controller.getX(GenericHID.Hand.kRight)) * DrivetrainSubsystem.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND
     ));
-    m_drivetrainSubsystem.zeroGyroscope();
+
+    m_drivetrainSubsystem.getGyroscopeObj().calibrate();
+
+    m_drivetrainSubsystem.getGyroscopeObj().reset();
+    m_drivetrainSubsystem.getGyroscopeObj().zeroYaw();
+    
     // Configure the button bindings
     configureButtonBindings();
   }

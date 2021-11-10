@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import static frc.robot.Constants.*;
@@ -161,15 +162,12 @@ public class DrivetrainSubsystem extends SubsystemBase {
         m_navx.zeroYaw();
   }
 
+  public AHRS getGyroscopeObj(){
+        return m_navx;
+  }
+
   public Rotation2d getGyroscopeRotation() {
-
-    if (m_navx.isMagnetometerCalibrated()) {
-      // We will only get valid fused headings if the magnetometer is calibrated
-      return Rotation2d.fromDegrees(m_navx.getFusedHeading());
-    }
-
-    // We have to invert the angle of the NavX so that rotating the robot counter-clockwise makes the angle increase.
-    return Rotation2d.fromDegrees(360.0 - m_navx.getYaw());
+        return m_navx.getRotation2d();
   }
 
   public void drive(ChassisSpeeds chassisSpeeds) {
@@ -178,6 +176,9 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
+    SmartDashboard.putNumber("GyroOutputMag", getGyroscopeRotation().getDegrees());
+    SmartDashboard.putNumber("GyroOutputNormal", m_navx.getRotation2d().getDegrees());
+
     SwerveModuleState[] states = m_kinematics.toSwerveModuleStates(m_chassisSpeeds);
     SwerveDriveKinematics.normalizeWheelSpeeds(states, MAX_VELOCITY_METERS_PER_SECOND);
 
