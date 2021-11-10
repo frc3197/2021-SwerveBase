@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.Button;
 import frc.robot.commands.DefaultDriveCommand;
 import frc.robot.subsystems.DrivetrainSubsystem;
+import frc.robot.uti.FilteredController;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -25,6 +26,7 @@ public class RobotContainer {
   private final DrivetrainSubsystem m_drivetrainSubsystem = new DrivetrainSubsystem();
 
   private final XboxController m_controller = new XboxController(0);
+  private final FilteredController filteredController = new FilteredController(m_controller);
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -37,15 +39,12 @@ public class RobotContainer {
     // Right stick X axis -> rotation
     m_drivetrainSubsystem.setDefaultCommand(new DefaultDriveCommand(
             m_drivetrainSubsystem,
-            () -> -modifyAxis(m_controller.getY(GenericHID.Hand.kLeft)) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
-            () -> -modifyAxis(m_controller.getX(GenericHID.Hand.kLeft)) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
-            () -> -modifyAxis(m_controller.getX(GenericHID.Hand.kRight)) * DrivetrainSubsystem.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND
+            () -> -modifyAxis(filteredController.getY(GenericHID.Hand.kLeft,.2)) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
+            () -> -modifyAxis(filteredController.getX(GenericHID.Hand.kLeft,.2)) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
+            () -> -modifyAxis(filteredController.getX(GenericHID.Hand.kRight,.2)) * DrivetrainSubsystem.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND
     ));
 
-    m_drivetrainSubsystem.getGyroscopeObj().calibrate();
-
-    m_drivetrainSubsystem.getGyroscopeObj().reset();
-    m_drivetrainSubsystem.getGyroscopeObj().zeroYaw();
+    recalibrateGyroscope();
     
     // Configure the button bindings
     configureButtonBindings();
@@ -72,6 +71,12 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
     return new InstantCommand();
+  }
+
+  public void recalibrateGyroscope(){
+    m_drivetrainSubsystem.getGyroscopeObj().calibrate();
+    m_drivetrainSubsystem.getGyroscopeObj().reset();
+    m_drivetrainSubsystem.getGyroscopeObj().zeroYaw();
   }
 
   private static double deadband(double value, double deadband) {
