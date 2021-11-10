@@ -6,7 +6,17 @@ package frc.robot;
 
 import com.swervedrivespecialties.swervelib.SdsModuleConfigurations;
 
+import edu.wpi.first.wpilibj.controller.PIDController;
+import edu.wpi.first.wpilibj.controller.ProfiledPIDController;
+import edu.wpi.first.wpilibj.geometry.Pose2d;
+import edu.wpi.first.wpilibj.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.util.Units;
+import edu.wpi.first.wpiutil.math.MatBuilder;
+import edu.wpi.first.wpiutil.math.Matrix;
+import edu.wpi.first.wpiutil.math.Nat;
+import edu.wpi.first.wpiutil.math.numbers.N1;
+import edu.wpi.first.wpiutil.math.numbers.N3;
+import frc.robot.util.PIDGroup;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
@@ -61,7 +71,32 @@ public final class Constants {
             public static final double MAX_ANG_VEL_RAD = MAX_VEL_METERS /
             Math.hypot(Constants.dimensions.TRACKWIDTH / 2.0, Constants.dimensions.WHEELBASE / 2.0);
             public static final double MAX_VOLTAGE = 12.0;
+            public static final double MAX_ANG_ACCEL = 2 * Math.PI;
 
         }
+    }
+
+    public static final class auto{
+
+        /*
+        public static final Matrix<N3, N1> POSE_STD_DEV = new MatBuilder<>(Nat.N5(), Nat.N1()).fill(0.02, 0.02, 0.01, 0.02, 0.02), // State measurement standard deviations. X, Y, theta.
+        public static final Matrix<N3, N1> ENCODER_GYRO_DEV = new MatBuilder<>(Nat.N3(), Nat.N1()).fill(0.02, 0.02, 0.01), // Local measurement standard deviations. Left encoder, right encoder, gyro.    
+        public static final Matrix<N3, N1> VISION_DEVIATION = new MatBuilder<>(Nat.N3(), Nat.N1()).fill(0.1, 0.1, 0.01)); // Global measurement standard deviations. X, Y, and theta.        
+        */
+        public static final class follower{
+            public static final TrapezoidProfile.Constraints ROT_PROFILE = new TrapezoidProfile.Constraints(maximums.swerve.MAX_ANG_VEL_RAD, maximums.swerve.MAX_ANG_ACCEL);
+
+            public static final PIDController X_PID_CONTROLLER = new PIDController(1, 0, 0);
+            public static final PIDController Y_PID_CONTROLLER = new PIDController(1, 0, 0); 
+            public static final ProfiledPIDController ROT_PID_CONTROLLER = new ProfiledPIDController(1,0,0, ROT_PROFILE);
+        } 
+
+        public static final class startingPos{
+            public static final Pose2d DEFAULT_POS = new Pose2d();
+        }
+
+    
+
+
     }
 }

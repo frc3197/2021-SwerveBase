@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.Button;
 import frc.robot.commands.DefaultDriveCommand;
 import frc.robot.subsystems.DrivetrainSubsystem;
-import frc.robot.uti.FilteredController;
+import frc.robot.util.FilteredController;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
