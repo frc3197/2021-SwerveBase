@@ -4,17 +4,19 @@
 
 package frc.robot.commands.AutoCommands;
 
+import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DrivetrainSubsystem;
-// ONLY WORKS AS A TOGGLE COMMAND
-public class Defend extends CommandBase {
-  //TODO: Test Defense Command
-  DrivetrainSubsystem m_drivetrain;
-  /** Creates a new Defend. */
-  public Defend(DrivetrainSubsystem m_drivetrain) {
+
+public class MoveToPosition extends CommandBase {
+  DrivetrainSubsystem m_DrivetrainSubsystem;
+  Pose2d desiredPosition;
+  /** Creates a new MoveToPosition. */
+  public MoveToPosition(DrivetrainSubsystem m_DrivetrainSubsystem, Pose2d desiredPosition) {
+    addRequirements(m_DrivetrainSubsystem);
+    this.m_DrivetrainSubsystem = m_DrivetrainSubsystem;
+    this.desiredPosition = desiredPosition;
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(m_drivetrain);
-    this.m_drivetrain = m_drivetrain;
   }
 
   // Called when the command is initially scheduled.
@@ -24,7 +26,7 @@ public class Defend extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_drivetrain.defense();
+    m_DrivetrainSubsystem.trajectoryFollow(desiredPosition);
   }
 
   // Called once the command ends or is interrupted.
@@ -34,6 +36,6 @@ public class Defend extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return m_DrivetrainSubsystem.finishedMovement();
   }
 }

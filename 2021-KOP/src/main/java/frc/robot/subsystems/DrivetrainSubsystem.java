@@ -210,6 +210,15 @@ public class DrivetrainSubsystem extends SubsystemBase {
                 // Set the modules to move at those velocities
                 drive(adjustedVelocities);
         }
+        public void trajectoryFollow(Pose2d desiredPosition) {
+
+                // Calculate the velocities for the chassis
+                ChassisSpeeds adjustedVelocities = follower.calculate(getPose2d(), desiredPosition, Constants.auto.follower.LINEAR_VELOCITY_DEFAULT,
+                                desiredPosition.getRotation());
+
+                // Set the modules to move at those velocities
+                drive(adjustedVelocities);
+        }
 
         public boolean finishedMovement() {
                 return follower.atReference();

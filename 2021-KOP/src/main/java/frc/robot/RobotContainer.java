@@ -39,9 +39,9 @@ public class RobotContainer {
     // Right stick X axis -> rotation
     m_drivetrainSubsystem.setDefaultCommand(new DefaultDriveCommand(
             m_drivetrainSubsystem,
-            () -> -modifyAxis(filteredController.getY(GenericHID.Hand.kLeft,.2)) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
-            () -> -modifyAxis(filteredController.getX(GenericHID.Hand.kLeft,.2)) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
-            () -> -modifyAxis(filteredController.getX(GenericHID.Hand.kRight,.2)) * DrivetrainSubsystem.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND
+            () -> -modifyAxis(filteredController.getY(GenericHID.Hand.kLeft,.2)) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND * Constants.outputs.drive,
+            () -> -modifyAxis(filteredController.getX(GenericHID.Hand.kLeft,.2)) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND * Constants.outputs.drive,
+            () -> -modifyAxis(filteredController.getX(GenericHID.Hand.kRight,.2)) * DrivetrainSubsystem.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND * Constants.outputs.drive
     ));
 
     recalibrateGyroscope();

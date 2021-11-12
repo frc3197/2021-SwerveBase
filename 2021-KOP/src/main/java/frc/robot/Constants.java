@@ -76,6 +76,10 @@ public final class Constants {
         }
     }
 
+    public static final class outputs{
+        public static final double drive = .7;
+    }
+
     public static final class auto{
 
         /*
@@ -89,6 +93,8 @@ public final class Constants {
             public static final PIDController X_PID_CONTROLLER = new PIDController(1, 0, 0);
             public static final PIDController Y_PID_CONTROLLER = new PIDController(1, 0, 0); 
             public static final ProfiledPIDController ROT_PID_CONTROLLER = new ProfiledPIDController(1,0,0, ROT_PROFILE);
+
+			public static final double LINEAR_VELOCITY_DEFAULT = 0;
         } 
 
         public static final class startingPos{
