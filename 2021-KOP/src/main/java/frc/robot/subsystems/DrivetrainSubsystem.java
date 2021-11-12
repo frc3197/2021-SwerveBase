@@ -164,6 +164,10 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
         @Override
         public void periodic() {
+                Shuffleboard.getTab("Auto Tuning").add("CurrentPosX", getPose2d().getX());
+                Shuffleboard.getTab("Auto Tuning").add("CurrentPosY", getPose2d().getY());
+                Shuffleboard.getTab("Auto Tuning").add("CurrentPosRot", getPose2d().getRotation().getDegrees());
+
                 SmartDashboard.putNumber("GyroOutputRaw", getGyroscopeRotation().getDegrees());
                 SmartDashboard.putNumber("GyroOutputAuto", -getGyroscopeRotation().getDegrees()); // Left/CCW should
                                                                                                   // increase the gyro
@@ -191,14 +195,19 @@ public class DrivetrainSubsystem extends SubsystemBase {
                 return m_odometry.getPoseMeters();
         }
 
-        // Mpves the modules into an "X" to prevent us from getting bullied and stops
+        public void resetOdometry(){
+                // THIS MUST BE CALLED AFTER GYRO RESET
+                m_odometry.resetPosition(Constants.auto.startingPos.DEFAULT_POS, getGyroscopeRotation());
+        }
+
+        // Moves the modules into an "X" to prevent us from getting bullied and stops
         // the motors
         public void defense() {
                 // FIXME: If motors not on brakeMode and defense doesn't work, add braking here
-                m_frontLeftModule.set(0, Math.toRadians(-45));
-                m_frontRightModule.set(0, Math.toRadians(45));
-                m_backLeftModule.set(0, Math.toRadians(45));
-                m_backRightModule.set(0, Math.toRadians(-45));
+                m_frontLeftModule.set(0, Math.toRadians(45));
+                m_frontRightModule.set(0, Math.toRadians(-45));
+                m_backLeftModule.set(0, Math.toRadians(-45));
+                m_backRightModule.set(0, Math.toRadians(45));
         }
 
         public void trajectoryFollow(Pose2d desiredPosition, double linearVelocity) {
