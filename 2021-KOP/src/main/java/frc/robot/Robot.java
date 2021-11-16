@@ -75,6 +75,8 @@ public class Robot extends TimedRobot {
     // continue until interrupted by another command, remove
     // this line or comment it out.
     m_robotContainer.recalibrateGyroscope();
+    m_robotContainer.resetOdometry();
+    System.out.println(Constants.maximums.swerve.MAX_VEL_METERS);
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }

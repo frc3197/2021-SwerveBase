@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.wpilibj.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.wpilibj.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.wpilibj.kinematics.SwerveModuleState;
@@ -96,6 +97,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
                         Constants.auto.follower.X_PID_CONTROLLER, Constants.auto.follower.Y_PID_CONTROLLER,
                         Constants.auto.follower.ROT_PID_CONTROLLER);
 
+        
+
         public DrivetrainSubsystem() {
                 ShuffleboardTab tab = Shuffleboard.getTab("Drivetrain");
 
@@ -173,15 +176,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
                                                                                                   // increase the gyro
                 SwerveModuleState[] states = m_kinematics.toSwerveModuleStates(m_chassisSpeeds);
                 SwerveDriveKinematics.normalizeWheelSpeeds(states, MAX_VELOCITY_METERS_PER_SECOND);
-
-                m_frontLeftModule.set(states[0].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE,
-                                states[0].angle.getRadians());
-                m_frontRightModule.set(states[1].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE,
-                                states[1].angle.getRadians());
-                m_backLeftModule.set(-states[2].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE,
-                                states[2].angle.getRadians());
-                m_backRightModule.set(states[3].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE,
-                                states[3].angle.getRadians());
+                setAllStates(states);
+               
                 updateOdometry(states);
 
         }
@@ -194,7 +190,16 @@ public class DrivetrainSubsystem extends SubsystemBase {
         public Pose2d getPose2d() {
                 return m_odometry.getPoseMeters();
         }
-
+        public void setAllStates(SwerveModuleState[] states){
+                m_frontLeftModule.set(states[0].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE,
+                states[0].angle.getRadians());
+m_frontRightModule.set(states[1].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE,
+                states[1].angle.getRadians());
+m_backLeftModule.set(-states[2].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE,
+                states[2].angle.getRadians());
+m_backRightModule.set(states[3].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE,
+                states[3].angle.getRadians());
+        }
         public void resetOdometry(){
                 // THIS MUST BE CALLED AFTER GYRO RESET
                 m_odometry.resetPosition(Constants.auto.startingPos.DEFAULT_POS, getGyroscopeRotation());
@@ -209,27 +214,33 @@ public class DrivetrainSubsystem extends SubsystemBase {
                 m_backRightModule.set(0, Math.toRadians(45));
         }
 
-        public void trajectoryFollow(Pose2d desiredPosition, double linearVelocity) {
+        public void trajectoryFollow(Pose2d goalPose, double linearVelocity) {
 
                 // Calculate the velocities for the chassis
-                ChassisSpeeds adjustedVelocities = follower.calculate(getPose2d(), desiredPosition, linearVelocity,
-                                desiredPosition.getRotation());
+                ChassisSpeeds adjustedVelocities = follower.calculate(getPose2d(), goalPose, linearVelocity,
+                        goalPose.getRotation());
 
-                // Set the modules to move at those velocities
-                drive(adjustedVelocities);
+                SwerveModuleState[] moduleStates = m_kinematics.toSwerveModuleStates(adjustedVelocities);
+                setAllStates(moduleStates);
+                updateOdometry(moduleStates);
         }
-        public void trajectoryFollow(Pose2d desiredPosition) {
+        public void trajectoryFollow(Pose2d goalPose) {
 
                 // Calculate the velocities for the chassis
-                ChassisSpeeds adjustedVelocities = follower.calculate(getPose2d(), desiredPosition, Constants.auto.follower.LINEAR_VELOCITY_DEFAULT,
-                                desiredPosition.getRotation());
+                ChassisSpeeds adjustedVelocities = follower.calculate(getPose2d(), goalPose, Constants.auto.follower.LINEAR_VELOCITY_DEFAULT,
+                goalPose.getRotation());
 
-                // Set the modules to move at those velocities
-                drive(adjustedVelocities);
+                SwerveModuleState[] moduleStates = m_kinematics.toSwerveModuleStates(adjustedVelocities);
+                setAllStates(moduleStates);
+                updateOdometry(moduleStates);
         }
 
         public boolean finishedMovement() {
                 return follower.atReference();
         }
+
+	public SwerveDriveKinematics getKinematics() {
+			return m_kinematics;
+	}
 
 }

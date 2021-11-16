@@ -4,63 +4,60 @@
 
 package frc.robot.commands.AutoCommands;
 
+import java.util.List;
+
 import edu.wpi.first.wpilibj.geometry.Pose2d;
+import edu.wpi.first.wpilibj.geometry.Translation2d;
+import edu.wpi.first.wpilibj.trajectory.Trajectory;
+import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
+import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import frc.robot.Constants;
 import frc.robot.subsystems.DrivetrainSubsystem;
 
-public class DriveForwardDistance extends CommandBase {
+public class DriveForwardDistance {
   /** Creates a new DriveForwardDistance. */
-Pose2d desiredPose2d;
-double linearVelocity;
-DrivetrainSubsystem m_drivetrain;
-
+  Pose2d desiredPose2d;
+  Pose2d currentPosition;
+  double linearVelocity, newX, newY;
+  DrivetrainSubsystem m_drivetrain;
+  Trajectory target;
+  TrajectoryConfig trajConfig;
 
   public DriveForwardDistance(DrivetrainSubsystem m_drivetrain, double distance) {
-    // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(m_drivetrain);
-
-    Pose2d currentPosition = m_drivetrain.getPose2d();
-    double newX = currentPosition.getX() + (distance * currentPosition.getRotation().getCos());
-    double newY = currentPosition.getY() + (distance * currentPosition.getRotation().getSin());
+    this.m_drivetrain = m_drivetrain;
+    currentPosition = m_drivetrain.getPose2d();
+    newX = currentPosition.getX() + (distance * currentPosition.getRotation().getCos());
+    newY = currentPosition.getY() + (distance * currentPosition.getRotation().getSin());
     this.desiredPose2d = new Pose2d(newX, newY, currentPosition.getRotation());
-    this.linearVelocity = Constants.maximums.swerve.MAX_VEL_METERS;
+    this.linearVelocity = Constants.auto.follower.LINEAR_VELOCITY_DEFAULT;
+    TrajectoryConfig trajConfig = Constants.auto.follower.T_CONFIG.setKinematics(m_drivetrain.getKinematics());
+    target = TrajectoryGenerator.generateTrajectory(currentPosition, List.of(new Translation2d(newX * .25, newY * .25)),
+        desiredPose2d, trajConfig);
 
   }
 
   public DriveForwardDistance(DrivetrainSubsystem m_drivetrain, double distance, double linearVelocity) {
-    // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(m_drivetrain);
-
-    Pose2d currentPosition = m_drivetrain.getPose2d();
-    double newX = currentPosition.getX() + (distance * currentPosition.getRotation().getCos());
-    double newY = currentPosition.getY() + (distance * currentPosition.getRotation().getSin());
+    this.m_drivetrain = m_drivetrain;
+    currentPosition = m_drivetrain.getPose2d();
+    newX = currentPosition.getX() + (distance * currentPosition.getRotation().getCos());
+    newY = currentPosition.getY() + (distance * currentPosition.getRotation().getSin());
     this.desiredPose2d = new Pose2d(newX, newY, currentPosition.getRotation());
     this.linearVelocity = linearVelocity;
+    trajConfig = Constants.auto.follower.T_CONFIG.setKinematics(m_drivetrain.getKinematics());
+    target = TrajectoryGenerator.generateTrajectory(currentPosition, List.of(new Translation2d(newX * .25, newY * .25),
+        new Translation2d(newX * .5, newY * .5), new Translation2d(newX * .75, newY * .75)), desiredPose2d, trajConfig);
 
   }
 
-  
-
-  // Called when the command is initially scheduled.
-  @Override
-  public void initialize() {}
-
-  // Called every time the scheduler runs while the command is scheduled.
-  @Override
-  public void execute() {
-    m_drivetrain.trajectoryFollow(desiredPose2d, linearVelocity);
-  }
-
-  // Called once the command ends or is interrupted.
-  @Override
-  public void end(boolean interrupted) {
-    
-  }
-
-  // Returns true when the command should end.
-  @Override
-  public boolean isFinished() {
-    return m_drivetrain.finishedMovement();
+  public Command getAutoCommand() {
+    SwerveControllerCommand m_swerveCommand = new SwerveControllerCommand(target, m_drivetrain::getPose2d,
+        m_drivetrain.getKinematics(), Constants.auto.follower.X_PID_CONTROLLER,
+        Constants.auto.follower.Y_PID_CONTROLLER, Constants.auto.follower.ROT_PID_CONTROLLER,
+        m_drivetrain::setAllStates, m_drivetrain);
+        return m_swerveCommand.andThen( ()-> m_drivetrain.defense());
   }
 }

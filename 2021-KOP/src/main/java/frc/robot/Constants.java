@@ -9,6 +9,7 @@ import com.swervedrivespecialties.swervelib.SdsModuleConfigurations;
 import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.controller.ProfiledPIDController;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
+import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
 import edu.wpi.first.wpilibj.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.util.Units;
 import edu.wpi.first.wpiutil.math.MatBuilder;
@@ -92,9 +93,11 @@ public final class Constants {
 
             public static final PIDController X_PID_CONTROLLER = new PIDController(1, 0, 0);
             public static final PIDController Y_PID_CONTROLLER = new PIDController(1, 0, 0); 
-            public static final ProfiledPIDController ROT_PID_CONTROLLER = new ProfiledPIDController(1,0,0, ROT_PROFILE);
-
-			public static final double LINEAR_VELOCITY_DEFAULT = 0;
+            public static final ProfiledPIDController ROT_PID_CONTROLLER = new ProfiledPIDController(0,0,0, ROT_PROFILE);
+            // DRIVING DEFAULT IS 5
+            public static final double LINEAR_VELOCITY_DEFAULT = maximums.swerve.MAX_VEL_METERS;
+            // MUST SET KINEMATICS, see documentation
+            public static final TrajectoryConfig T_CONFIG = new TrajectoryConfig(maximums.swerve.MAX_VEL_METERS, maximums.swerve.MAX_ANG_VEL_RAD);
         } 
 
         public static final class startingPos{

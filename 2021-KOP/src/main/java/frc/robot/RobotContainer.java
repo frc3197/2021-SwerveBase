@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.Button;
 import frc.robot.commands.DefaultDriveCommand;
 import frc.robot.commands.AutoCommands.Defend;
+import frc.robot.commands.AutoCommands.DriveForwardDistance;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.util.FilteredController;
 
@@ -59,6 +60,7 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     // Back button zeros the gyroscope
+    new Button(m_controller::getXButton).whenPressed(new DriveForwardDistance(m_drivetrainSubsystem , 1).getAutoCommand());
     new Button(m_controller::getAButton).whileHeld(new Defend(m_drivetrainSubsystem));
     new Button(m_controller::getBackButton)
             // No requirements because we don't need to interrupt anything
@@ -73,6 +75,10 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
     return new InstantCommand();
+  }
+
+  public void resetOdometry(){
+    m_drivetrainSubsystem.resetOdometry();
   }
 
   public void recalibrateGyroscope(){
