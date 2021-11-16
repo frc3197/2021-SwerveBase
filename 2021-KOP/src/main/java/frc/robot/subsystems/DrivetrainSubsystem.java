@@ -164,9 +164,9 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
         @Override
         public void periodic() {
-                Shuffleboard.getTab("Auto Tuning").add("CurrentPosX", getPose2d().getX());
-                Shuffleboard.getTab("Auto Tuning").add("CurrentPosY", getPose2d().getY());
-                Shuffleboard.getTab("Auto Tuning").add("CurrentPosRot", getPose2d().getRotation().getDegrees());
+                SmartDashboard.putNumber("CurrentPosX", getPose2d().getX());
+                SmartDashboard.putNumber("CurrentPosY", getPose2d().getY());
+                SmartDashboard.putNumber("CurrentPosRot", getPose2d().getRotation().getDegrees());
 
                 SmartDashboard.putNumber("GyroOutputRaw", getGyroscopeRotation().getDegrees());
                 SmartDashboard.putNumber("GyroOutputAuto", -getGyroscopeRotation().getDegrees()); // Left/CCW should
@@ -203,7 +203,6 @@ public class DrivetrainSubsystem extends SubsystemBase {
         // Moves the modules into an "X" to prevent us from getting bullied and stops
         // the motors
         public void defense() {
-                // FIXME: If motors not on brakeMode and defense doesn't work, add braking here
                 m_frontLeftModule.set(0, Math.toRadians(45));
                 m_frontRightModule.set(0, Math.toRadians(-45));
                 m_backLeftModule.set(0, Math.toRadians(-45));

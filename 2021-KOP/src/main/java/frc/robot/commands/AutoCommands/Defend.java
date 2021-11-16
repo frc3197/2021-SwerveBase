@@ -8,7 +8,6 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DrivetrainSubsystem;
 // ONLY WORKS AS A TOGGLE COMMAND
 public class Defend extends CommandBase {
-  //TODO: Test Defense Command
   DrivetrainSubsystem m_drivetrain;
   /** Creates a new Defend. */
   public Defend(DrivetrainSubsystem m_drivetrain) {
