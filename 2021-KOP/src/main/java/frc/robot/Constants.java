@@ -12,12 +12,6 @@ import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
 import edu.wpi.first.wpilibj.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.util.Units;
-import edu.wpi.first.wpiutil.math.MatBuilder;
-import edu.wpi.first.wpiutil.math.Matrix;
-import edu.wpi.first.wpiutil.math.Nat;
-import edu.wpi.first.wpiutil.math.numbers.N1;
-import edu.wpi.first.wpiutil.math.numbers.N3;
-import frc.robot.util.PIDGroup;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide

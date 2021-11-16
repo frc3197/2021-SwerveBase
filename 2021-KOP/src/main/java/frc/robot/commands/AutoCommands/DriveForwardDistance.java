@@ -12,8 +12,6 @@ import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import frc.robot.Constants;
 import frc.robot.subsystems.DrivetrainSubsystem;
@@ -54,10 +52,13 @@ public class DriveForwardDistance {
   }
 
   public Command getAutoCommand() {
+    var rot_pid = Constants.auto.follower.ROT_PID_CONTROLLER;
+    rot_pid.enableContinuousInput(-Math.PI, Math.PI);
     SwerveControllerCommand m_swerveCommand = new SwerveControllerCommand(target, m_drivetrain::getPose2d,
         m_drivetrain.getKinematics(), Constants.auto.follower.X_PID_CONTROLLER,
-        Constants.auto.follower.Y_PID_CONTROLLER, Constants.auto.follower.ROT_PID_CONTROLLER,
+        Constants.auto.follower.Y_PID_CONTROLLER,rot_pid,
         m_drivetrain::setAllStates, m_drivetrain);
+        m_drivetrain.resetOdometry(currentPosition);
         return m_swerveCommand.andThen( ()-> m_drivetrain.defense());
   }
 }

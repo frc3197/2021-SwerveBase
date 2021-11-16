@@ -4,20 +4,16 @@
 
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.sensors.PigeonIMU;
 import com.kauailabs.navx.frc.AHRS;
 import com.swervedrivespecialties.swervelib.Mk3SwerveModuleHelper;
-import com.swervedrivespecialties.swervelib.SdsModuleConfigurations;
 import com.swervedrivespecialties.swervelib.SwerveModule;
 
 import edu.wpi.first.wpilibj.SerialPort.Port;
 import edu.wpi.first.wpilibj.controller.HolonomicDriveController;
-import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds;
-import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.wpilibj.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.wpilibj.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.wpilibj.kinematics.SwerveModuleState;
@@ -26,10 +22,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import frc.robot.Constants;
-
-import static frc.robot.Constants.*;
 
 public class DrivetrainSubsystem extends SubsystemBase {
         /**
@@ -203,6 +196,10 @@ m_backRightModule.set(states[3].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_S
         public void resetOdometry(){
                 // THIS MUST BE CALLED AFTER GYRO RESET
                 m_odometry.resetPosition(Constants.auto.startingPos.DEFAULT_POS, getGyroscopeRotation());
+        }
+
+        public void resetOdometry(Pose2d resetPos){
+                m_odometry.resetPosition(resetPos, getGyroscopeRotation());
         }
 
         // Moves the modules into an "X" to prevent us from getting bullied and stops
