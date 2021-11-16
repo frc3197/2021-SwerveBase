@@ -167,18 +167,16 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
         @Override
         public void periodic() {
-                SmartDashboard.putNumber("CurrentPosX", getPose2d().getX());
-                SmartDashboard.putNumber("CurrentPosY", getPose2d().getY());
-                SmartDashboard.putNumber("CurrentPosRot", getPose2d().getRotation().getDegrees());
 
                 SmartDashboard.putNumber("GyroOutputRaw", getGyroscopeRotation().getDegrees());
                 SmartDashboard.putNumber("GyroOutputAuto", -getGyroscopeRotation().getDegrees()); // Left/CCW should
                                                                                                   // increase the gyro
                 SwerveModuleState[] states = m_kinematics.toSwerveModuleStates(m_chassisSpeeds);
                 SwerveDriveKinematics.normalizeWheelSpeeds(states, MAX_VELOCITY_METERS_PER_SECOND);
+                updateOdometry(states);
                 setAllStates(states);
                
-                updateOdometry(states);
+                
 
         }
 
@@ -199,6 +197,8 @@ m_backLeftModule.set(-states[2].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_S
                 states[2].angle.getRadians());
 m_backRightModule.set(states[3].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE,
                 states[3].angle.getRadians());
+                updateOdometry(states);
+                
         }
         public void resetOdometry(){
                 // THIS MUST BE CALLED AFTER GYRO RESET

@@ -91,13 +91,13 @@ public final class Constants {
         public static final class follower{
             public static final TrapezoidProfile.Constraints ROT_PROFILE = new TrapezoidProfile.Constraints(maximums.swerve.MAX_ANG_VEL_RAD, maximums.swerve.MAX_ANG_ACCEL);
 
-            public static final PIDController X_PID_CONTROLLER = new PIDController(1, 0, 0);
+            public static final PIDController X_PID_CONTROLLER = new PIDController(2, 0, 0);
             public static final PIDController Y_PID_CONTROLLER = new PIDController(1, 0, 0); 
-            public static final ProfiledPIDController ROT_PID_CONTROLLER = new ProfiledPIDController(0,0,0, ROT_PROFILE);
+            public static final ProfiledPIDController ROT_PID_CONTROLLER = new ProfiledPIDController(1,0,0, ROT_PROFILE);
             // DRIVING DEFAULT IS 5
-            public static final double LINEAR_VELOCITY_DEFAULT = maximums.swerve.MAX_VEL_METERS;
+            public static final double LINEAR_VELOCITY_DEFAULT = 1;
             // MUST SET KINEMATICS, see documentation
-            public static final TrajectoryConfig T_CONFIG = new TrajectoryConfig(maximums.swerve.MAX_VEL_METERS, maximums.swerve.MAX_ANG_VEL_RAD);
+            public static final TrajectoryConfig T_CONFIG = new TrajectoryConfig(LINEAR_VELOCITY_DEFAULT, maximums.swerve.MAX_ANG_VEL_RAD);
         } 
 
         public static final class startingPos{
