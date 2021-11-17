@@ -33,7 +33,7 @@ public class DefaultDriveCommand extends CommandBase {
                 m_translationYSupplier.getAsDouble(), m_rotationSupplier.getAsDouble(),
                 m_drivetrainSubsystem.getGyroscopeRotation()));
 
-        /* BRAKE //TODO: Test Brake Mode
+        /* BRAKE
         if (m_translationXSupplier.getAsDouble() != 0 && m_translationYSupplier.getAsDouble() != 0
                 && m_rotationSupplier.getAsDouble() != 0) {
             m_drivetrainSubsystem.drive(ChassisSpeeds.fromFieldRelativeSpeeds(m_translationXSupplier.getAsDouble(),
