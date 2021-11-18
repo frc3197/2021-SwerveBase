@@ -33,7 +33,8 @@ public class DriveForwardDistance {
     this.desiredPose2d = new Pose2d(newX, newY, currentPosition.getRotation());
     this.linearVelocity = Constants.auto.follower.LINEAR_VELOCITY_DEFAULT;
     TrajectoryConfig trajConfig = Constants.auto.follower.T_CONFIG.setKinematics(m_drivetrain.getKinematics());
-    target = TrajectoryGenerator.generateTrajectory(currentPosition, List.of(new Translation2d(newX * .25, newY * .25)),
+    target = TrajectoryGenerator.generateTrajectory(currentPosition, List.of(new Translation2d(newX * .25, newY * .25),
+    new Translation2d(newX * .5, newY * .5), new Translation2d(newX * .75, newY * .75)),
         desiredPose2d, trajConfig);
 
   }

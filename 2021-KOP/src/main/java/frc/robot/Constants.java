@@ -66,13 +66,14 @@ public final class Constants {
             public static final double MAX_ANG_VEL_RAD = MAX_VEL_METERS /
             Math.hypot(Constants.dimensions.TRACKWIDTH / 2.0, Constants.dimensions.WHEELBASE / 2.0);
             public static final double MAX_VOLTAGE = 12.0;
-            public static final double MAX_ANG_ACCEL = 2 * Math.PI;
+            public static final double MAX_ANG_ACCEL = 8 * Math.PI;
 
         }
     }
 
     public static final class outputs{
-        public static final double drive = .7;
+        public static final double strafe = .7;
+        public static final double turnRate = 1;
     }
 
     public static final class auto{
@@ -85,11 +86,11 @@ public final class Constants {
         public static final class follower{
             public static final TrapezoidProfile.Constraints ROT_PROFILE = new TrapezoidProfile.Constraints(maximums.swerve.MAX_ANG_VEL_RAD, maximums.swerve.MAX_ANG_ACCEL);
 
-            public static final PIDController X_PID_CONTROLLER = new PIDController(2, 0, 0);
+            public static final PIDController X_PID_CONTROLLER = new PIDController(1, 0, 0);
             public static final PIDController Y_PID_CONTROLLER = new PIDController(1, 0, 0); 
             public static final ProfiledPIDController ROT_PID_CONTROLLER = new ProfiledPIDController(1,0,0, ROT_PROFILE);
             // DRIVING DEFAULT IS 5
-            public static final double LINEAR_VELOCITY_DEFAULT = 1;
+            public static final double LINEAR_VELOCITY_DEFAULT = 5;
             // MUST SET KINEMATICS, see documentation
             public static final TrajectoryConfig T_CONFIG = new TrajectoryConfig(LINEAR_VELOCITY_DEFAULT, maximums.swerve.MAX_ANG_VEL_RAD);
         } 

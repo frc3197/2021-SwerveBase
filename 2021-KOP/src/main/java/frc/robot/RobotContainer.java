@@ -40,9 +40,9 @@ public class RobotContainer {
     // Right stick X axis -> rotation
     m_drivetrainSubsystem.setDefaultCommand(new DefaultDriveCommand(
             m_drivetrainSubsystem,
-            () -> -modifyAxis(filteredController.getY(GenericHID.Hand.kLeft,.2)) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND * Constants.outputs.drive,
-            () -> -modifyAxis(filteredController.getX(GenericHID.Hand.kLeft,.2)) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND * Constants.outputs.drive,
-            () -> -modifyAxis(filteredController.getX(GenericHID.Hand.kRight,.2)) * DrivetrainSubsystem.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND * Constants.outputs.drive
+            () -> -modifyAxis(filteredController.getY(GenericHID.Hand.kLeft,.2)) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND * Constants.outputs.strafe,
+            () -> -modifyAxis(filteredController.getX(GenericHID.Hand.kLeft,.2)) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND * Constants.outputs.strafe,
+            () -> -modifyAxis(filteredController.getX(GenericHID.Hand.kRight,.2)) * DrivetrainSubsystem.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND * Constants.outputs.turnRate
     ));
 
     recalibrateGyroscope();
@@ -59,7 +59,7 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     // Back button zeros the gyroscope
-    new Button(m_controller::getXButton).whenPressed(new DriveForwardDistance(m_drivetrainSubsystem , 1).getAutoCommand());
+    new Button(m_controller::getXButton).whenPressed(new DriveForwardDistance(m_drivetrainSubsystem , 2).getAutoCommand());
     new Button(m_controller::getAButton).whileHeld(new Defend(m_drivetrainSubsystem));
     new Button(m_controller::getBackButton)
             // No requirements because we don't need to interrupt anything
