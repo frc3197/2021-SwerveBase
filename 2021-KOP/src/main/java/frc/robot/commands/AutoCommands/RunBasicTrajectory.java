@@ -56,7 +56,13 @@ public class RunBasicTrajectory extends CommandBase {
   public void execute() {
 
     state = target.sample(timer.get());
+    
+    SmartDashboard.putNumber("Pose X", state.poseMeters.getX());
+    SmartDashboard.putNumber("Pose Y", state.poseMeters.getY());
+    SmartDashboard.putNumber("State Time", state.timeSeconds);
+    SmartDashboard.putNumber("State Velocity", state.velocityMetersPerSecond);
     SmartDashboard.putNumber("Auto-Simple Timer", timer.get());
+    
     currentPosition = m_drivetrain.getPose2d();
     speeds = hController.calculate(currentPosition, state, initialPos.getRotation());
     m_drivetrain.setAllStates(m_drivetrain.getKinematics().toSwerveModuleStates(speeds));

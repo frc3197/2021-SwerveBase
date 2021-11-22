@@ -77,7 +77,7 @@ public class Robot extends TimedRobot {
     // this line or comment it out.
     m_robotContainer.recalibrateGyroscope();
     m_robotContainer.resetOdometry();
-    System.out.println(Constants.maximums.swerve.MAX_VEL_METERS);
+    System.out.println(Constants.swerve.MAX_VEL_METERS);
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }

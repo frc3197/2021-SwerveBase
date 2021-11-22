@@ -60,47 +60,52 @@ public final class Constants {
         }
     }
 
-    public static final class maximums {
-        public static final class swerve {
-            public static final double MAX_VEL_METERS = 6380.0 / 60.0 * SdsModuleConfigurations.MK3_FAST.getDriveReduction() * SdsModuleConfigurations.MK3_FAST.getWheelDiameter() * Math.PI;
-            public static final double MAX_ANG_VEL_RAD = MAX_VEL_METERS /
-            Math.hypot(Constants.dimensions.TRACKWIDTH / 2.0, Constants.dimensions.WHEELBASE / 2.0);
-            public static final double MAX_VOLTAGE = 12.0;
-            public static final double MAX_ANG_ACCEL = 8 * Math.PI;
+    public static final class swerve {
+        // ORDER: FL FR BL BR
+        public static final double MAX_VEL_METERS = 6380.0 / 60.0 * SdsModuleConfigurations.MK3_FAST.getDriveReduction()
+                * SdsModuleConfigurations.MK3_FAST.getWheelDiameter() * Math.PI;
+        public static final double MAX_ANG_VEL_RAD = MAX_VEL_METERS
+                / Math.hypot(Constants.dimensions.TRACKWIDTH / 2.0, Constants.dimensions.WHEELBASE / 2.0);
+        public static final double MAX_VOLTAGE = 12.0;
+        public static final double MAX_ANG_ACCEL = 8 * Math.PI;
 
-        }
     }
 
-    public static final class outputs{
+    public static final class outputs {
         public static final double strafe = .7;
         public static final double turnRate = 1;
     }
 
-    public static final class auto{
+    public static final class auto {
 
         /*
-        public static final Matrix<N3, N1> POSE_STD_DEV = new MatBuilder<>(Nat.N5(), Nat.N1()).fill(0.02, 0.02, 0.01, 0.02, 0.02), // State measurement standard deviations. X, Y, theta.
-        public static final Matrix<N3, N1> ENCODER_GYRO_DEV = new MatBuilder<>(Nat.N3(), Nat.N1()).fill(0.02, 0.02, 0.01), // Local measurement standard deviations. Left encoder, right encoder, gyro.    
-        public static final Matrix<N3, N1> VISION_DEVIATION = new MatBuilder<>(Nat.N3(), Nat.N1()).fill(0.1, 0.1, 0.01)); // Global measurement standard deviations. X, Y, and theta.        
-        */
-        public static final class follower{
-            public static final TrapezoidProfile.Constraints ROT_PROFILE = new TrapezoidProfile.Constraints(maximums.swerve.MAX_ANG_VEL_RAD, maximums.swerve.MAX_ANG_ACCEL);
+         * public static final Matrix<N3, N1> POSE_STD_DEV = new MatBuilder<>(Nat.N5(),
+         * Nat.N1()).fill(0.02, 0.02, 0.01, 0.02, 0.02), // State measurement standard
+         * deviations. X, Y, theta. public static final Matrix<N3, N1> ENCODER_GYRO_DEV
+         * = new MatBuilder<>(Nat.N3(), Nat.N1()).fill(0.02, 0.02, 0.01), // Local
+         * measurement standard deviations. Left encoder, right encoder, gyro. public
+         * static final Matrix<N3, N1> VISION_DEVIATION = new MatBuilder<>(Nat.N3(),
+         * Nat.N1()).fill(0.1, 0.1, 0.01)); // Global measurement standard deviations.
+         * X, Y, and theta.
+         */
+        public static final class follower {
+            public static final TrapezoidProfile.Constraints ROT_PROFILE = new TrapezoidProfile.Constraints(
+                    swerve.MAX_ANG_VEL_RAD, swerve.MAX_ANG_ACCEL);
 
             public static final PIDController X_PID_CONTROLLER = new PIDController(1, 0, 0);
-            public static final PIDController Y_PID_CONTROLLER = new PIDController(1, 0, 0); 
-            public static final ProfiledPIDController ROT_PID_CONTROLLER = new ProfiledPIDController(1,0,0, ROT_PROFILE);
+            public static final PIDController Y_PID_CONTROLLER = new PIDController(1, 0, 0);
+            public static final ProfiledPIDController ROT_PID_CONTROLLER = new ProfiledPIDController(1, 0, 0,
+                    ROT_PROFILE);
             // DRIVING DEFAULT IS 5
             public static final double LINEAR_VELOCITY_DEFAULT = 5;
             // MUST SET KINEMATICS, see documentation
-            public static final TrajectoryConfig T_CONFIG = new TrajectoryConfig(LINEAR_VELOCITY_DEFAULT, maximums.swerve.MAX_ANG_VEL_RAD);
-        } 
-
-        public static final class startingPos{
-            public static final Pose2d DEFAULT_POS = new Pose2d();
+            public static final TrajectoryConfig T_CONFIG = new TrajectoryConfig(LINEAR_VELOCITY_DEFAULT,
+                    swerve.MAX_ANG_VEL_RAD);
         }
 
-    
-
+        public static final class startingPos {
+            public static final Pose2d DEFAULT_POS = new Pose2d();
+        }
 
     }
 }
