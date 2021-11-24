@@ -6,6 +6,8 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.geometry.Pose2d;
+import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -13,6 +15,7 @@ import edu.wpi.first.wpilibj2.command.button.Button;
 import frc.robot.commands.DefaultDriveCommand;
 import frc.robot.commands.AutoCommands.Defend;
 import frc.robot.commands.AutoCommands.DriveForwardDistance;
+import frc.robot.commands.AutoCommands.MoveToPosition;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.util.FilteredController;
 
@@ -24,11 +27,17 @@ import frc.robot.util.FilteredController;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private final DrivetrainSubsystem m_drivetrainSubsystem = new DrivetrainSubsystem();
+  private final static DrivetrainSubsystem m_drivetrainSubsystem = new DrivetrainSubsystem();
 
-  private final XboxController m_controller = new XboxController(0);
-  private final FilteredController filteredController = new FilteredController(m_controller);
+  private final static XboxController m_controller = new XboxController(0);
+  public static final FilteredController filteredController = new FilteredController(m_controller);
 
+  public static final DefaultDriveCommand m_driveCommand = new DefaultDriveCommand(
+    m_drivetrainSubsystem,
+    () -> -modifyAxis(filteredController.getY(GenericHID.Hand.kLeft,.2)) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND * Constants.outputs.strafe,
+    () -> -modifyAxis(filteredController.getX(GenericHID.Hand.kLeft,.2)) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND * Constants.outputs.strafe,
+    () -> -modifyAxis(filteredController.getX(GenericHID.Hand.kRight,.2)) * DrivetrainSubsystem.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND * Constants.outputs.turnRate
+);
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
@@ -38,12 +47,7 @@ public class RobotContainer {
     // Left stick Y axis -> forward and backwards movement
     // Left stick X axis -> left and right movement
     // Right stick X axis -> rotation
-    m_drivetrainSubsystem.setDefaultCommand(new DefaultDriveCommand(
-            m_drivetrainSubsystem,
-            () -> -modifyAxis(filteredController.getY(GenericHID.Hand.kLeft,.2)) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND * Constants.outputs.strafe,
-            () -> -modifyAxis(filteredController.getX(GenericHID.Hand.kLeft,.2)) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND * Constants.outputs.strafe,
-            () -> -modifyAxis(filteredController.getX(GenericHID.Hand.kRight,.2)) * DrivetrainSubsystem.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND * Constants.outputs.turnRate
-    ));
+    m_drivetrainSubsystem.setDefaultCommand(m_driveCommand);
 
     recalibrateGyroscope();
     
@@ -59,7 +63,8 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     // Back button zeros the gyroscope
-    new Button(m_controller::getXButton).whenPressed(new DriveForwardDistance(m_drivetrainSubsystem, 2));
+    new Button(m_controller::getYButton).whenPressed(m_driveCommand);
+    new Button(m_controller::getXButton).whenPressed(new MoveToPosition(m_drivetrainSubsystem, new Pose2d(0,0 , new Rotation2d(Math.PI))));
     new Button(m_controller::getAButton).whileHeld(new Defend(m_drivetrainSubsystem));
     new Button(m_controller::getBackButton)
             // No requirements because we don't need to interrupt anything
@@ -107,6 +112,8 @@ public class RobotContainer {
 
     return value;
   }
+
+
 
   public void publishPosition(){
     SmartDashboard.putNumber("CurrentPosX", m_drivetrainSubsystem.getPose2d().getX());

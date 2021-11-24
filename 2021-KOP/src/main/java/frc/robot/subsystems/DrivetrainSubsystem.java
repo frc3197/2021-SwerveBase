@@ -21,8 +21,10 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.util.Units;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Constants.auto.follower;
 
 public class DrivetrainSubsystem extends SubsystemBase {
         /**
@@ -31,7 +33,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
          * This can be reduced to cap the robot's maximum speed. Typically, this is
          * useful during initial testing of the robot.
          */
-        public static final double MAX_VOLTAGE = Constants.maximums.swerve.MAX_VOLTAGE;
+        public static final double MAX_VOLTAGE = Constants.swerve.MAX_VOLTAGE;
         // The formula for calculating the theoretical maximum velocity is:
         // <Motor free speed RPM> / 60 * <Drive reduction> * <Wheel diameter meters> *
         // pi
@@ -46,7 +48,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
          * This is a measure of how fast the robot should be able to drive in a straight
          * line.
          */
-        public static final double MAX_VELOCITY_METERS_PER_SECOND = Constants.maximums.swerve.MAX_VEL_METERS;
+        public static final double MAX_VELOCITY_METERS_PER_SECOND = Constants.swerve.MAX_VEL_METERS;
         /**
          * The maximum angular velocity of the robot in radians per second.
          * <p>
@@ -54,7 +56,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
          */
         // Here we calculate the theoretical maximum angular velocity. You can also
         // replace this with a measured amount.
-        public static final double MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND = Constants.maximums.swerve.MAX_ANG_VEL_RAD;
+        public static final double MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND = Constants.swerve.MAX_ANG_VEL_RAD;
 
         private final SwerveDriveKinematics m_kinematics = new SwerveDriveKinematics(
                         // Front left
@@ -94,6 +96,10 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
         public DrivetrainSubsystem() {
                 ShuffleboardTab tab = Shuffleboard.getTab("Drivetrain");
+                Constants.auto.follower.X_PID_CONTROLLER.setTolerance(.02);
+                Constants.auto.follower.Y_PID_CONTROLLER.setTolerance(.02);
+                Constants.auto.follower.ROT_PID_CONTROLLER.setTolerance(.02);
+                follower.setTolerance(new Pose2d(.1, .1, new Rotation2d(Math.toRadians(5))));
 
                 m_frontLeftModule = Mk3SwerveModuleHelper.createFalcon500(
                                 // This parameter is optional, but will allow you to see the current state of
@@ -217,9 +223,8 @@ m_backRightModule.set(states[3].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_S
                 ChassisSpeeds adjustedVelocities = follower.calculate(getPose2d(), goalPose, linearVelocity,
                         goalPose.getRotation());
 
-                SwerveModuleState[] moduleStates = m_kinematics.toSwerveModuleStates(adjustedVelocities);
-                setAllStates(moduleStates);
-                updateOdometry(moduleStates);
+                //SwerveModuleState[] moduleStates = m_kinematics.toSwerveModuleStates(adjustedVelocities);
+                drive(adjustedVelocities);
         }
         public void trajectoryFollow(Pose2d goalPose) {
 
@@ -227,9 +232,8 @@ m_backRightModule.set(states[3].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_S
                 ChassisSpeeds adjustedVelocities = follower.calculate(getPose2d(), goalPose, Constants.auto.follower.LINEAR_VELOCITY_DEFAULT,
                 goalPose.getRotation());
 
-                SwerveModuleState[] moduleStates = m_kinematics.toSwerveModuleStates(adjustedVelocities);
-                setAllStates(moduleStates);
-                updateOdometry(moduleStates);
+                //SwerveModuleState[] moduleStates = m_kinematics.toSwerveModuleStates(adjustedVelocities);
+                drive(adjustedVelocities);
         }
 
         public boolean finishedMovement() {

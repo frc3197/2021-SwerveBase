@@ -42,7 +42,7 @@ public final class Constants {
             public static final int MODULE_DRIVE_MOTOR = 6;
             public static final int MODULE_STEER_MOTOR = 7;
             public static final int MODULE_STEER_ENCODER = 3;
-            public static final double MODULE_STEER_OFFSET = -Math.toRadians(4.9);
+            public static final double MODULE_STEER_OFFSET = -Math.toRadians(349);
         }
 
         public static final class blMod {
@@ -89,15 +89,16 @@ public final class Constants {
          * X, Y, and theta.
          */
         public static final class follower {
+            private static final double MAX_ANG_VEL_RAD_AUTO = 8 * Math.PI;
             public static final TrapezoidProfile.Constraints ROT_PROFILE = new TrapezoidProfile.Constraints(
-                    swerve.MAX_ANG_VEL_RAD, swerve.MAX_ANG_ACCEL);
+                    MAX_ANG_VEL_RAD_AUTO, swerve.MAX_ANG_ACCEL);
 
-            public static final PIDController X_PID_CONTROLLER = new PIDController(1, 0, 0);
-            public static final PIDController Y_PID_CONTROLLER = new PIDController(1, 0, 0);
-            public static final ProfiledPIDController ROT_PID_CONTROLLER = new ProfiledPIDController(1, 0, 0,
+            public static final PIDController X_PID_CONTROLLER = new PIDController(5.25, 1, .4);
+            public static final PIDController Y_PID_CONTROLLER = new PIDController(5.25, 1, .4);
+            public static final ProfiledPIDController ROT_PID_CONTROLLER = new ProfiledPIDController(.13, 0, .39,
                     ROT_PROFILE);
             // DRIVING DEFAULT IS 5
-            public static final double LINEAR_VELOCITY_DEFAULT = 5;
+            public static final double LINEAR_VELOCITY_DEFAULT = 1;
             // MUST SET KINEMATICS, see documentation
             public static final TrajectoryConfig T_CONFIG = new TrajectoryConfig(LINEAR_VELOCITY_DEFAULT,
                     swerve.MAX_ANG_VEL_RAD);

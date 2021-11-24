@@ -4,8 +4,11 @@
 
 package frc.robot.commands.AutoCommands;
 
+import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.RobotContainer;
+import frc.robot.commands.DefaultDriveCommand;
 import frc.robot.subsystems.DrivetrainSubsystem;
 
 public class MoveToPosition extends CommandBase {
@@ -13,9 +16,10 @@ public class MoveToPosition extends CommandBase {
   Pose2d desiredPosition;
   /** Creates a new MoveToPosition. */
   public MoveToPosition(DrivetrainSubsystem m_DrivetrainSubsystem, Pose2d desiredPosition) {
-    addRequirements(m_DrivetrainSubsystem);
+    
     this.m_DrivetrainSubsystem = m_DrivetrainSubsystem;
     this.desiredPosition = desiredPosition;
+    addRequirements(m_DrivetrainSubsystem);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
@@ -31,11 +35,14 @@ public class MoveToPosition extends CommandBase {
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+   m_DrivetrainSubsystem.defense();
+  }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
     return m_DrivetrainSubsystem.finishedMovement();
   }
+
 }
