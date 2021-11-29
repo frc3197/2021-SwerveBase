@@ -90,8 +90,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
                         Constants.auto.follower.X_PID_CONTROLLER, Constants.auto.follower.Y_PID_CONTROLLER,
                         Constants.auto.follower.ROT_PID_CONTROLLER);
 
+        public static Translation2d m_CCR = new Translation2d();
         
-
         public DrivetrainSubsystem() {
                 ShuffleboardTab tab = Shuffleboard.getTab("Drivetrain");
                 Constants.auto.follower.X_PID_CONTROLLER.setTolerance(.02);
@@ -168,7 +168,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
                 SmartDashboard.putNumber("GyroOutputRaw", getGyroscopeRotation().getDegrees());
                 SmartDashboard.putNumber("GyroOutputAuto", -getGyroscopeRotation().getDegrees()); // Left/CCW should
                                                                                                   // increase the gyro
-                SwerveModuleState[] states = m_kinematics.toSwerveModuleStates(m_chassisSpeeds);
+                SwerveModuleState[] states = m_kinematics.toSwerveModuleStates(m_chassisSpeeds, m_CCR);
                 SwerveDriveKinematics.normalizeWheelSpeeds(states, MAX_VELOCITY_METERS_PER_SECOND);
                 updateOdometry(states);
                 setAllStates(states);
