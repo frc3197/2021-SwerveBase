@@ -4,37 +4,34 @@
 
 package frc.robot.commands.AutoCommands;
 
+import frc.robot.extra_libraries.PathPlanner;
+import frc.robot.extra_libraries.PathPlannerTrajectory;
+import frc.robot.extra_libraries.PathPlannerTrajectory.PathPlannerState;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.controller.HolonomicDriveController;
 import edu.wpi.first.wpilibj.controller.ProfiledPIDController;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.trajectory.Trajectory;
-import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
+
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
-import frc.robot.extra_libraries.PathPlanner;
-import frc.robot.extra_libraries.PathPlannerTrajectory.PathPlannerState;
 import frc.robot.subsystems.DrivetrainSubsystem;
 
 public class RunBasicTrajectory extends CommandBase {
   private Pose2d currentPosition;
   private DrivetrainSubsystem m_drivetrain;
-  private Trajectory target;
-  private TrajectoryConfig trajConfig;
+  private PathPlannerTrajectory target;
   private ChassisSpeeds speeds = new ChassisSpeeds();
   private ProfiledPIDController rot_pid;
-  private Pose2d initialPos;
-  HolonomicDriveController hController;
+  private PathPlannerState state;
+  private HolonomicDriveController hController;
 
   private final Timer timer = new Timer();
 
-  public RunBasicTrajectory(DrivetrainSubsystem m_drivetrain) {
+  public RunBasicTrajectory(DrivetrainSubsystem m_drivetrain, String path) {
     this.m_drivetrain = m_drivetrain;
     rot_pid = Constants.auto.follower.ROT_PID_CONTROLLER;
-    trajConfig = Constants.auto.follower.T_CONFIG.setKinematics(m_drivetrain.getKinematics());
-    
+    target = PathPlanner.loadPath(path, Constants.swerve.MAX_VEL_METERS, Constants.swerve.MAX_ANG_VEL_RAD);
   }
 
   @Override
@@ -43,8 +40,6 @@ public class RunBasicTrajectory extends CommandBase {
     rot_pid.enableContinuousInput(-Math.PI, Math.PI);
     hController = new HolonomicDriveController(Constants.auto.follower.X_PID_CONTROLLER,
         Constants.auto.follower.Y_PID_CONTROLLER, Constants.auto.follower.ROT_PID_CONTROLLER);
-    hController.setEnabled(true);
-    target = PathPlanner.loadPath("path", Constants.swerve.MAX_VEL_METERS, Constants.swerve.MAX_ANG_VEL_RAD);
     timer.reset();
     timer.start();
   }
@@ -52,14 +47,7 @@ public class RunBasicTrajectory extends CommandBase {
   @Override
   public void execute() {
     var curTime = timer.get();
-    PathPlannerState state = (PathPlannerState) target.sample(curTime);
-    
-    SmartDashboard.putNumber("Pose X", state.poseMeters.getX());
-    SmartDashboard.putNumber("Pose Y", state.poseMeters.getY());
-    SmartDashboard.putNumber("State Time", state.timeSeconds);
-    SmartDashboard.putNumber("State Velocity", state.velocityMetersPerSecond);
-    SmartDashboard.putNumber("Auto-Simple Timer", timer.get());
-    
+    state = (PathPlannerState) target.sample(curTime);
     currentPosition = m_drivetrain.getPose2d();
     speeds = hController.calculate(currentPosition, state, state.holonomicRotation);
     m_drivetrain.setAllStates(m_drivetrain.getKinematics().toSwerveModuleStates(speeds));

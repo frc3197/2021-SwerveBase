@@ -62,7 +62,7 @@ public class RobotContainer {
     // Back button zeros the gyroscope
     new Button(m_controller::getYButton).whenPressed(m_driveCommand);
     //new Button(m_controller::getXButton).whenPressed(new MoveToPosition(m_drivetrainSubsystem, new Pose2d(0,0 , new Rotation2d(Math.PI))));
-    new Button(m_controller::getXButton).whenPressed(new RunBasicTrajectory(m_drivetrainSubsystem));
+    new Button(m_controller::getXButton).whenPressed(new RunBasicTrajectory(m_drivetrainSubsystem, "Test Path"));
     new Button(m_controller::getAButton).whileHeld(new Defend(m_drivetrainSubsystem));
     new Button(m_controller::getBackButton)
             // No requirements because we don't need to interrupt anything
