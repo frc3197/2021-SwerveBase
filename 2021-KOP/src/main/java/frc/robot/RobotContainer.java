@@ -6,16 +6,13 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.geometry.Pose2d;
-import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.Button;
 import frc.robot.commands.DefaultDriveCommand;
 import frc.robot.commands.AutoCommands.Defend;
-import frc.robot.commands.AutoCommands.DriveForwardDistance;
-import frc.robot.commands.AutoCommands.MoveToPosition;
+import frc.robot.commands.AutoCommands.RunBasicTrajectory;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.util.FilteredController;
 
@@ -64,7 +61,8 @@ public class RobotContainer {
   private void configureButtonBindings() {
     // Back button zeros the gyroscope
     new Button(m_controller::getYButton).whenPressed(m_driveCommand);
-    new Button(m_controller::getXButton).whenPressed(new MoveToPosition(m_drivetrainSubsystem, new Pose2d(0,0 , new Rotation2d(Math.PI))));
+    //new Button(m_controller::getXButton).whenPressed(new MoveToPosition(m_drivetrainSubsystem, new Pose2d(0,0 , new Rotation2d(Math.PI))));
+    new Button(m_controller::getXButton).whenPressed(new RunBasicTrajectory(m_drivetrainSubsystem));
     new Button(m_controller::getAButton).whileHeld(new Defend(m_drivetrainSubsystem));
     new Button(m_controller::getBackButton)
             // No requirements because we don't need to interrupt anything
