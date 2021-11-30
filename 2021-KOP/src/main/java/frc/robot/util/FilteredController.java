@@ -53,7 +53,7 @@ public class FilteredController {
 
     public int getPOVButton() {
         int POVButton;
-        if (controller.getPOVCount() >= 1) {
+        if (controller.getPOVCount() > 0) {
             switch (controller.getPOV()) {
                 case 0:
                     POVButton = 8;
