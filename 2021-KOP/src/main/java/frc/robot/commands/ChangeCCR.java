@@ -5,6 +5,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.geometry.Translation2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants;
@@ -37,7 +38,7 @@ public class ChangeCCR extends InstantCommand {
       case 8: checkCCR(new Translation2d(y,0));
       case 9 : checkCCR(new Translation2d(y,-x));
     }
-
+   SmartDashboard.putNumber("POV Button", index); 
   }
 
   private void checkCCR(Translation2d newCCR){

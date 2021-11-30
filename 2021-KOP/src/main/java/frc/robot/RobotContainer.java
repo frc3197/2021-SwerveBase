@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.Button;
+import frc.robot.commands.ChangeCCR;
 import frc.robot.commands.DefaultDriveCommand;
 import frc.robot.commands.AutoCommands.Defend;
 import frc.robot.commands.AutoCommands.RunBasicTrajectory;
@@ -59,6 +60,7 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
+    new Button(filteredController::getPOVPressed).whenPressed(new ChangeCCR(filteredController.getPOVButton()));
     // Back button zeros the gyroscope
     new Button(m_controller::getYButton).whenPressed(m_driveCommand);
     //new Button(m_controller::getXButton).whenPressed(new MoveToPosition(m_drivetrainSubsystem, new Pose2d(0,0 , new Rotation2d(Math.PI))));
@@ -117,5 +119,7 @@ public class RobotContainer {
     SmartDashboard.putNumber("CurrentPosX", m_drivetrainSubsystem.getPose2d().getX());
     SmartDashboard.putNumber("CurrentPosY", m_drivetrainSubsystem.getPose2d().getY());
     SmartDashboard.putNumber("CurrentPosRot", m_drivetrainSubsystem.getPose2d().getRotation().getDegrees());
+    SmartDashboard.putNumber("Controller POV", filteredController.getPOVButton());
+    SmartDashboard.putBoolean("Controller POV Bool", filteredController.getPOVPressed());
   }
 }
