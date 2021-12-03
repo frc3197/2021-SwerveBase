@@ -164,7 +164,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
         @Override
         public void periodic() {
-
+                SmartDashboard.putNumber("New CCR X",m_CCR.getX());
+                SmartDashboard.putNumber("New CCR Y",m_CCR.getY());
                 SmartDashboard.putNumber("GyroOutputRaw", getGyroscopeRotation().getDegrees());
                 SmartDashboard.putNumber("GyroOutputAuto", -getGyroscopeRotation().getDegrees()); // Left/CCW should
                                                                                                   // increase the gyro

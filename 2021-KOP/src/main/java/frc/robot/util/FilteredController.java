@@ -48,12 +48,12 @@ public class FilteredController {
         return new InputFilter(controller.getTriggerAxis(hand)).getFiltered(deadzone);
     }
     public boolean getPOVPressed(){
-        return controller.getPOVCount() > 0;
+        return controller.getPOV() != -1;
     }
 
     public int getPOVButton() {
         int POVButton;
-        if (controller.getPOVCount() > 0) {
+        if (controller.getPOV() != -1) {
             switch (controller.getPOV()) {
                 case 0:
                     POVButton = 8;
