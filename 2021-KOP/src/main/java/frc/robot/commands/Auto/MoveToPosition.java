@@ -2,17 +2,17 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands.AutoCommands;
+package frc.robot.commands.Auto;
 
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.DrivetrainSubsystem;
+import frc.robot.subsystems.DriveSubsystem;
 
 public class MoveToPosition extends CommandBase {
-  DrivetrainSubsystem m_DrivetrainSubsystem;
+  DriveSubsystem m_DrivetrainSubsystem;
   Pose2d desiredPosition;
   /** Creates a new MoveToPosition. */
-  public MoveToPosition(DrivetrainSubsystem m_DrivetrainSubsystem, Pose2d desiredPosition) {
+  public MoveToPosition(DriveSubsystem m_DrivetrainSubsystem, Pose2d desiredPosition) {
     
     this.m_DrivetrainSubsystem = m_DrivetrainSubsystem;
     this.desiredPosition = desiredPosition;
@@ -20,6 +20,10 @@ public class MoveToPosition extends CommandBase {
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
+  
+  /** 
+   * @param execute(
+   */
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {}
@@ -30,12 +34,20 @@ public class MoveToPosition extends CommandBase {
     m_DrivetrainSubsystem.trajectoryFollow(desiredPosition);
   }
 
+  
+  /** 
+   * @param interrupted
+   */
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
    m_DrivetrainSubsystem.defense();
   }
 
+  
+  /** 
+   * @return boolean
+   */
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {

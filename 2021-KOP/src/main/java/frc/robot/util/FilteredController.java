@@ -47,10 +47,18 @@ public class FilteredController {
     public double getTrigger(Hand hand, double deadzone) {
         return new InputFilter(controller.getTriggerAxis(hand)).getFiltered(deadzone);
     }
+    
+    /** 
+     * @return boolean
+     */
     public boolean getPOVPressed(){
         return controller.getPOV() != -1;
     }
 
+    
+    /** 
+     * @return int
+     */
     public int getPOVButton() {
         int POVButton;
         if (controller.getPOV() != -1) {

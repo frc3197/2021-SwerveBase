@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands.AutoCommands;
+package frc.robot.commands.Auto;
 
 import java.util.List;
 
@@ -18,14 +18,14 @@ import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
-import frc.robot.subsystems.DrivetrainSubsystem;
+import frc.robot.subsystems.DriveSubsystem;
 
 public class DriveForwardDistance extends CommandBase{
   /** Creates a new DriveForwardDistance. */
   private Pose2d desiredPose2d;
   private Pose2d currentPosition;
-  private double linearVelocity, newX, newY;
-  private DrivetrainSubsystem m_drivetrain;
+  private double newX, newY;
+  private DriveSubsystem m_drivetrain;
   private Trajectory target;
   private Trajectory.State state = new Trajectory.State();
   private TrajectoryConfig trajConfig;
@@ -36,29 +36,26 @@ public class DriveForwardDistance extends CommandBase{
 
   private final Timer timer = new Timer();
 
-  public DriveForwardDistance(DrivetrainSubsystem m_drivetrain, double distance) {
+  public DriveForwardDistance(DriveSubsystem m_drivetrain, double distance) {
     this.m_drivetrain = m_drivetrain;
     initialPos = m_drivetrain.getPose2d();
     newX = initialPos.getX() + (distance * initialPos.getRotation().getCos());
     newY = initialPos.getY() + (distance * initialPos.getRotation().getSin());
     this.desiredPose2d = new Pose2d(newX, newY, initialPos.getRotation());
     rot_pid = Constants.auto.follower.ROT_PID_CONTROLLER;
-    this.linearVelocity = Constants.auto.follower.LINEAR_VELOCITY_DEFAULT;
     trajConfig = Constants.auto.follower.T_CONFIG.setKinematics(m_drivetrain.getKinematics());
     target = TrajectoryGenerator.generateTrajectory(initialPos, List.of(new Translation2d(newX * .25, newY * .25),
-    new Translation2d(newX * .5, newY * .5), new Translation2d(newX * .75, newY * .75)),
-        desiredPose2d, trajConfig);
+        new Translation2d(newX * .5, newY * .5), new Translation2d(newX * .75, newY * .75)), desiredPose2d, trajConfig);
     timer.start();
   }
 
-  public DriveForwardDistance(DrivetrainSubsystem m_drivetrain, double distance, double linearVelocity) {
+  public DriveForwardDistance(DriveSubsystem m_drivetrain, double distance, double linearVelocity) {
     this.m_drivetrain = m_drivetrain;
     initialPos = m_drivetrain.getPose2d();
     newX = initialPos.getX() + (distance * initialPos.getRotation().getCos());
     newY = initialPos.getY() + (distance * initialPos.getRotation().getSin());
     this.desiredPose2d = new Pose2d(newX, newY, initialPos.getRotation());
     rot_pid = Constants.auto.follower.ROT_PID_CONTROLLER;
-    this.linearVelocity = linearVelocity;
     trajConfig = Constants.auto.follower.T_CONFIG.setKinematics(m_drivetrain.getKinematics());
     target = TrajectoryGenerator.generateTrajectory(initialPos, List.of(new Translation2d(newX * .25, newY * .25),
     new Translation2d(newX * .5, newY * .5), new Translation2d(newX * .75, newY * .75)),
@@ -84,11 +81,19 @@ public class DriveForwardDistance extends CommandBase{
     m_drivetrain.setAllStates(m_drivetrain.getKinematics().toSwerveModuleStates(speeds));
 }
 
+
+/** 
+ * @return boolean
+ */
 @Override
 public boolean isFinished() {
   return timer.hasElapsed(target.getTotalTimeSeconds());
 }
 
+
+/** 
+ * @param interrupted
+ */
 @Override
 public void end(boolean interrupted) {
     m_drivetrain.defense();

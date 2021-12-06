@@ -68,6 +68,8 @@ public final class Constants {
                 / Math.hypot(Constants.dimensions.TRACKWIDTH / 2.0, Constants.dimensions.WHEELBASE / 2.0);
         public static final double MAX_VOLTAGE = 12.0;
         public static final double MAX_ANG_ACCEL = 8 * Math.PI;
+        public static final boolean feildRelativeOn = true;
+        public static final boolean brakeModeOn = false;
 
     }
 

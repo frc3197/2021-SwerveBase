@@ -10,10 +10,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.Button;
-import frc.robot.commands.DefaultDriveCommand;
-import frc.robot.commands.AutoCommands.Defend;
-import frc.robot.commands.AutoCommands.RunBasicTrajectory;
-import frc.robot.subsystems.DrivetrainSubsystem;
+import frc.robot.commands.DriveCommand;
+import frc.robot.commands.Auto.RunBasicTrajectory;
+import frc.robot.commands.Toggles.Defend;
+import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.util.FilteredController;
 
 /**
@@ -24,15 +24,15 @@ import frc.robot.util.FilteredController;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private final static DrivetrainSubsystem m_drivetrainSubsystem = new DrivetrainSubsystem();
+  private final static DriveSubsystem m_drivetrainSubsystem = new DriveSubsystem();
 
   private final static XboxController m_controller = new XboxController(0);
   public static final FilteredController filteredController = new FilteredController(m_controller);
-  public static final DefaultDriveCommand m_driveCommand = new DefaultDriveCommand(
+  public static final DriveCommand m_driveCommand = new DriveCommand(
     m_drivetrainSubsystem,
-    () -> -modifyAxis(filteredController.getY(GenericHID.Hand.kLeft,.2)) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND * Constants.outputs.strafe,
-    () -> -modifyAxis(filteredController.getX(GenericHID.Hand.kLeft,.2)) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND * Constants.outputs.strafe,
-    () -> -modifyAxis(filteredController.getX(GenericHID.Hand.kRight,.2)) * DrivetrainSubsystem.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND * Constants.outputs.turnRate
+    () -> -modifyAxis(filteredController.getY(GenericHID.Hand.kLeft,.2)) * DriveSubsystem.MAX_VELOCITY_METERS_PER_SECOND * Constants.outputs.strafe,
+    () -> -modifyAxis(filteredController.getX(GenericHID.Hand.kLeft,.2)) * DriveSubsystem.MAX_VELOCITY_METERS_PER_SECOND * Constants.outputs.strafe,
+    () -> -modifyAxis(filteredController.getX(GenericHID.Hand.kRight,.2)) * DriveSubsystem.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND * Constants.outputs.turnRate
 );
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -88,6 +88,12 @@ public class RobotContainer {
     m_drivetrainSubsystem.getGyroscopeObj().zeroYaw();
   }
 
+  
+  /** 
+   * @param value
+   * @param deadband
+   * @return double
+   */
   private static double deadband(double value, double deadband) {
     if (Math.abs(value) > deadband) {
       if (value > 0.0) {
@@ -100,6 +106,11 @@ public class RobotContainer {
     }
   }
 
+  
+  /** 
+   * @param value
+   * @return double
+   */
   private static double modifyAxis(double value) {
     // Deadband
     value = deadband(value, 0.05);

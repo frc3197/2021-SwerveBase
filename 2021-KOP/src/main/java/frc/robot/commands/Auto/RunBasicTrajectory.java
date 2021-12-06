@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands.AutoCommands;
+package frc.robot.commands.Auto;
 
 import frc.robot.extra_libraries.PathPlanner;
 import frc.robot.extra_libraries.PathPlannerTrajectory;
@@ -15,11 +15,11 @@ import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
-import frc.robot.subsystems.DrivetrainSubsystem;
+import frc.robot.subsystems.DriveSubsystem;
 
 public class RunBasicTrajectory extends CommandBase {
   private Pose2d currentPosition;
-  private DrivetrainSubsystem m_drivetrain;
+  private DriveSubsystem m_drivetrain;
   private PathPlannerTrajectory target;
   private ChassisSpeeds speeds = new ChassisSpeeds();
   private ProfiledPIDController rot_pid;
@@ -28,7 +28,7 @@ public class RunBasicTrajectory extends CommandBase {
 
   private final Timer timer = new Timer();
 
-  public RunBasicTrajectory(DrivetrainSubsystem m_drivetrain, String path) {
+  public RunBasicTrajectory(DriveSubsystem m_drivetrain, String path) {
     this.m_drivetrain = m_drivetrain;
     rot_pid = Constants.auto.follower.ROT_PID_CONTROLLER;
     target = PathPlanner.loadPath(path, Constants.swerve.MAX_VEL_METERS, Constants.swerve.MAX_ANG_VEL_RAD);
@@ -53,11 +53,19 @@ public class RunBasicTrajectory extends CommandBase {
     m_drivetrain.setAllStates(m_drivetrain.getKinematics().toSwerveModuleStates(speeds));
   }
 
+  
+  /** 
+   * @return boolean
+   */
   @Override
   public boolean isFinished() {
     return timer.hasElapsed(target.getTotalTimeSeconds());
   }
 
+  
+  /** 
+   * @param interrupted
+   */
   @Override
   public void end(boolean interrupted) {
     timer.stop();

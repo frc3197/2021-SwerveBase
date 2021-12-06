@@ -24,7 +24,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
-public class DrivetrainSubsystem extends SubsystemBase {
+public class DriveSubsystem extends SubsystemBase {
         /**
          * The maximum voltage that will be delivered to the drive motors.
          * <p>
@@ -91,8 +91,11 @@ public class DrivetrainSubsystem extends SubsystemBase {
                         Constants.auto.follower.ROT_PID_CONTROLLER);
 
         public static Translation2d m_CCR = new Translation2d();
+
+        private static boolean brakeMode = Constants.swerve.brakeModeOn;
+        private static boolean fieldRelative = Constants.swerve.feildRelativeOn;
         
-        public DrivetrainSubsystem() {
+        public DriveSubsystem() {
                 ShuffleboardTab tab = Shuffleboard.getTab("Drivetrain");
                 Constants.auto.follower.X_PID_CONTROLLER.setTolerance(.02);
                 Constants.auto.follower.Y_PID_CONTROLLER.setTolerance(.02);
@@ -150,14 +153,26 @@ public class DrivetrainSubsystem extends SubsystemBase {
                 m_navx.zeroYaw();
         }
 
+        
+        /** 
+         * @return AHRS
+         */
         public AHRS getGyroscopeObj() {
                 return m_navx;
         }
 
+        
+        /** 
+         * @return Rotation2d
+         */
         public Rotation2d getGyroscopeRotation() {
                 return m_navx.getRotation2d();
         }
 
+        
+        /** 
+         * @param chassisSpeeds
+         */
         public void drive(ChassisSpeeds chassisSpeeds) {
                 m_chassisSpeeds = chassisSpeeds;
         }
@@ -169,6 +184,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
                 SmartDashboard.putNumber("GyroOutputRaw", getGyroscopeRotation().getDegrees());
                 SmartDashboard.putNumber("GyroOutputAuto", -getGyroscopeRotation().getDegrees()); // Left/CCW should
                                                                                                   // increase the gyro
+                
                 SwerveModuleState[] states = m_kinematics.toSwerveModuleStates(m_chassisSpeeds, m_CCR);
                 SwerveDriveKinematics.normalizeWheelSpeeds(states, MAX_VELOCITY_METERS_PER_SECOND);
                 updateOdometry(states);
@@ -178,14 +194,26 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
         }
 
+        
+        /** 
+         * @param states
+         */
         public void updateOdometry(SwerveModuleState[] states) {
                 m_odometry.update(Rotation2d.fromDegrees(-getGyroscopeRotation().getDegrees()), states[0], states[1],
                                 states[2], states[3]);
         }
 
+        
+        /** 
+         * @return Pose2d
+         */
         public Pose2d getPose2d() {
                 return m_odometry.getPoseMeters();
         }
+        
+        /** 
+         * @param states
+         */
         public void setAllStates(SwerveModuleState[] states){
                 m_frontLeftModule.set(states[0].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE,
                 states[0].angle.getRadians());
@@ -203,6 +231,10 @@ m_backRightModule.set(states[3].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_S
                 m_odometry.resetPosition(Constants.auto.startingPos.DEFAULT_POS, getGyroscopeRotation());
         }
 
+        
+        /** 
+         * @param resetPos
+         */
         public void resetOdometry(Pose2d resetPos){
                 m_odometry.resetPosition(resetPos, getGyroscopeRotation());
         }
@@ -216,6 +248,11 @@ m_backRightModule.set(states[3].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_S
                 m_backRightModule.set(0, Math.toRadians(45));
         }
 
+        
+        /** 
+         * @param goalPose
+         * @param linearVelocity
+         */
         public void trajectoryFollow(Pose2d goalPose, double linearVelocity) {
 
                 // Calculate the velocities for the chassis
@@ -225,6 +262,10 @@ m_backRightModule.set(states[3].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_S
                 //SwerveModuleState[] moduleStates = m_kinematics.toSwerveModuleStates(adjustedVelocities);
                 drive(adjustedVelocities);
         }
+        
+        /** 
+         * @param goalPose
+         */
         public void trajectoryFollow(Pose2d goalPose) {
 
                 // Calculate the velocities for the chassis
@@ -235,12 +276,52 @@ m_backRightModule.set(states[3].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_S
                 drive(adjustedVelocities);
         }
 
+        
+        /** 
+         * @return boolean
+         */
         public boolean finishedMovement() {
                 return follower.atReference();
         }
 
-	public SwerveDriveKinematics getKinematics() {
+	
+        /** 
+         * @return SwerveDriveKinematics
+         */
+        public SwerveDriveKinematics getKinematics() {
 			return m_kinematics;
 	}
+
+	
+        /** 
+         * @return boolean
+         */
+        public static boolean getFieldRelative() {
+		return fieldRelative;
+	}
+
+	
+        /** 
+         * @return boolean
+         */
+        public static boolean getBrakeMode() {
+		return brakeMode;
+        }
+        
+        
+        /** 
+         * @param x
+         */
+        public static void setFieldRelative(boolean x){
+                fieldRelative = x;
+        }
+
+        
+        /** 
+         * @param x
+         */
+        public static void setBrakeMode(boolean x){
+                brakeMode = x;
+        }
 
 }

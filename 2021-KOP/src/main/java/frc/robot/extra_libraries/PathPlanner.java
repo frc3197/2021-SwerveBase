@@ -111,6 +111,11 @@ public class PathPlanner {
         return loadPath(name, maxVel, maxAccel, false);
     }
 
+    
+    /** 
+     * @param paths
+     * @return PathPlannerTrajectory
+     */
     private static PathPlannerTrajectory joinPaths(ArrayList<PathPlannerTrajectory> paths){
         ArrayList<Trajectory.State> joinedStates = new ArrayList<>();
 

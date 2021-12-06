@@ -2,20 +2,24 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands.AutoCommands;
+package frc.robot.commands.Toggles;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.DrivetrainSubsystem;
+import frc.robot.subsystems.DriveSubsystem;
 // ONLY WORKS AS A TOGGLE COMMAND
 public class Defend extends CommandBase {
-  DrivetrainSubsystem m_drivetrain;
+  DriveSubsystem m_drivetrain;
   /** Creates a new Defend. */
-  public Defend(DrivetrainSubsystem m_drivetrain) {
+  public Defend(DriveSubsystem m_drivetrain) {
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(m_drivetrain);
     this.m_drivetrain = m_drivetrain;
   }
 
+  
+  /** 
+   * @param execute(
+   */
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {}
@@ -26,10 +30,18 @@ public class Defend extends CommandBase {
     m_drivetrain.defense();
   }
 
+  
+  /** 
+   * @param isFinished(
+   */
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {}
 
+  
+  /** 
+   * @return boolean
+   */
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {

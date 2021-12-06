@@ -77,6 +77,14 @@ public class PathPlannerTrajectory extends Trajectory {
         return (PathPlannerState) getStates().get(i);
     }
 
+    
+    /** 
+     * @param pathPoints
+     * @param maxVel
+     * @param maxAccel
+     * @param reversed
+     * @return List<State>
+     */
     private static List<State> generatePath(ArrayList<Waypoint> pathPoints, double maxVel, double maxAccel, boolean reversed){
         List<PathPlannerState> joined = joinSplines(pathPoints, maxVel, PathPlanner.resolution);
         calculateMaxVel(joined, maxVel, maxAccel);
@@ -86,6 +94,12 @@ public class PathPlannerTrajectory extends Trajectory {
         return new ArrayList<>(joined);
     }
 
+    
+    /** 
+     * @param states
+     * @param maxVel
+     * @param maxAccel
+     */
     private static void calculateMaxVel(List<PathPlannerState> states, double maxVel, double maxAccel){
         for(int i = 0; i < states.size(); i++){
             double radius;
@@ -109,6 +123,12 @@ public class PathPlannerTrajectory extends Trajectory {
         }
     }
 
+    
+    /** 
+     * @param states
+     * @param pathPoints
+     * @param maxAccel
+     */
     private static void calculateVelocity(List<PathPlannerState> states, ArrayList<Waypoint> pathPoints, double maxAccel){
         states.get(0).velocityMetersPerSecond = 0;
 
@@ -155,6 +175,11 @@ public class PathPlannerTrajectory extends Trajectory {
         }
     }
 
+    
+    /** 
+     * @param states
+     * @param reversed
+     */
     private static void recalculateValues(List<PathPlannerState> states, boolean reversed){
         for(int i = 0; i < states.size(); i++){
             PathPlannerState now = states.get(i);
@@ -188,6 +213,13 @@ public class PathPlannerTrajectory extends Trajectory {
         }
     }
 
+    
+    /** 
+     * @param pathPoints
+     * @param maxVel
+     * @param step
+     * @return ArrayList<PathPlannerState>
+     */
     private static ArrayList<PathPlannerState> joinSplines(ArrayList<Waypoint> pathPoints, double maxVel, double step){
         ArrayList<PathPlannerState> states = new ArrayList<>();
         int numSplines = pathPoints.size() - 1;
@@ -248,6 +280,13 @@ public class PathPlannerTrajectory extends Trajectory {
         return states;
     }
 
+    
+    /** 
+     * @param s0
+     * @param s1
+     * @param s2
+     * @return double
+     */
     private static double calculateRadius(PathPlannerState s0, PathPlannerState s1, PathPlannerState s2){
         Translation2d a = s0.poseMeters.getTranslation();
         Translation2d b = s1.poseMeters.getTranslation();
