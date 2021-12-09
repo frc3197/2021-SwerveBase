@@ -10,6 +10,7 @@ import frc.robot.subsystems.DriveSubsystem;
 public class Defend extends CommandBase {
   DriveSubsystem m_drivetrain;
   /** Creates a new Defend. */
+  // Works as a psuedo manual brake by moving the swerve modules into an X configuration. This can help us not get bullied/pushed if neccesary or just as a quick stop.
   public Defend(DriveSubsystem m_drivetrain) {
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(m_drivetrain);
