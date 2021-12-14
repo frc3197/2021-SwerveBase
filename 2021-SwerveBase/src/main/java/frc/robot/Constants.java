@@ -74,9 +74,7 @@ public final class Constants implements Loggable {
         public static final double MAX_VOLTAGE = 12.0;
         @Log
         public static final double MAX_ANG_ACCEL = 8 * Math.PI;
-        @Log
         public static final boolean feildRelativeOn = true;
-        @Log
         public static final boolean brakeModeOn = false;
         
 

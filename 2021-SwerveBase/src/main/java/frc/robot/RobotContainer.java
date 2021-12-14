@@ -13,10 +13,10 @@ import edu.wpi.first.wpilibj2.command.button.Button;
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.Auto.RunBasicTrajectory;
 import frc.robot.commands.Toggles.Defend;
-import frc.robot.commands.Toggles.ToggleBrakeMode;
 import frc.robot.commands.Toggles.ToggleFieldRelative;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.util.FilteredController;
+import io.github.oblarg.oblog.Logger;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -46,7 +46,8 @@ public class RobotContainer {
     // Left stick X axis -> left and right movement
     // Right stick X axis -> rotation
     m_drivetrainSubsystem.setDefaultCommand(m_driveCommand);
-    
+    Logger.configureLoggingAndConfig(this, false);
+    Logger.setCycleWarningsEnabled(false);
     recalibrateGyroscope();
     
     // Configure the button bindings
@@ -133,6 +134,6 @@ public class RobotContainer {
     SmartDashboard.putNumber("CurrentPosRot", m_drivetrainSubsystem.getPose2d().getRotation().getDegrees());
     SmartDashboard.putNumber("Controller POV", filteredController.getPOVButton());
     SmartDashboard.putBoolean("Controller POV Bool", filteredController.getPOVPressed());
-    
+    Logger.updateEntries();
   }
 }

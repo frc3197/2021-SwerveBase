@@ -94,13 +94,13 @@ public class DriveSubsystem extends SubsystemBase implements Loggable {
                         Constants.auto.follower.ROT_PID_CONTROLLER);
 
         public static Translation2d m_CCR = new Translation2d();
-
+        @Log
         private static boolean brakeMode = Constants.swerve.brakeModeOn;
-
+        @Log
         private static boolean fieldRelative = Constants.swerve.feildRelativeOn;
         
         public DriveSubsystem() {
-                ShuffleboardTab tab = Shuffleboard.getTab("DriveSubsystem");
+                ShuffleboardTab tab = Shuffleboard.getTab("Drivetrain");
                 Constants.auto.follower.X_PID_CONTROLLER.setTolerance(.02);
                 Constants.auto.follower.Y_PID_CONTROLLER.setTolerance(.02);
                 Constants.auto.follower.ROT_PID_CONTROLLER.setTolerance(.02);
