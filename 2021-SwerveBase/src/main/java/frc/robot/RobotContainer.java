@@ -13,6 +13,8 @@ import edu.wpi.first.wpilibj2.command.button.Button;
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.Auto.RunBasicTrajectory;
 import frc.robot.commands.Toggles.Defend;
+import frc.robot.commands.Toggles.ToggleBrakeMode;
+import frc.robot.commands.Toggles.ToggleFieldRelative;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.util.FilteredController;
 
@@ -66,6 +68,8 @@ public class RobotContainer {
     new Button(m_controller::getBackButton)
             // No requirements because we don't need to interrupt anything
             .whenPressed(m_drivetrainSubsystem::zeroGyroscope);
+
+    new Button(m_controller::getStartButton).whenPressed(new ToggleFieldRelative());
   }
 
   /**
