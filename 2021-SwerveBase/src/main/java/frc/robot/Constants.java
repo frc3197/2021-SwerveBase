@@ -12,6 +12,8 @@ import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
 import edu.wpi.first.wpilibj.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.util.Units;
+import io.github.oblarg.oblog.Loggable;
+import io.github.oblarg.oblog.annotations.Log;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
@@ -23,7 +25,7 @@ import edu.wpi.first.wpilibj.util.Units;
  * It is advised to statically import this class (or one of its inner classes)
  * wherever the constants are needed, to reduce verbosity.
  */
-public final class Constants {
+public final class Constants implements Loggable {
 
     public static final class dimensions {
         public static final double TRACKWIDTH = Units.inchesToMeters(25);
@@ -62,14 +64,21 @@ public final class Constants {
 
     public static final class swerve {
         // ORDER: FL FR BL BR
+        @Log
         public static final double MAX_VEL_METERS = 6380.0 / 60.0 * SdsModuleConfigurations.MK3_FAST.getDriveReduction()
                 * SdsModuleConfigurations.MK3_FAST.getWheelDiameter() * Math.PI;
+        @Log
         public static final double MAX_ANG_VEL_RAD = MAX_VEL_METERS
                 / Math.hypot(Constants.dimensions.TRACKWIDTH / 2.0, Constants.dimensions.WHEELBASE / 2.0);
+        @Log        
         public static final double MAX_VOLTAGE = 12.0;
+        @Log
         public static final double MAX_ANG_ACCEL = 8 * Math.PI;
+        @Log
         public static final boolean feildRelativeOn = true;
+        @Log
         public static final boolean brakeModeOn = false;
+        
 
     }
 
@@ -91,12 +100,15 @@ public final class Constants {
          * X, Y, and theta.
          */
         public static final class follower {
+            @Log
             private static final double MAX_ANG_VEL_RAD_AUTO = 8 * Math.PI;
             public static final TrapezoidProfile.Constraints ROT_PROFILE = new TrapezoidProfile.Constraints(
                     MAX_ANG_VEL_RAD_AUTO, swerve.MAX_ANG_ACCEL);
-
+            @Log
             public static final PIDController X_PID_CONTROLLER = new PIDController(5.25, 1, .4);
+            @Log
             public static final PIDController Y_PID_CONTROLLER = new PIDController(5.25, 1, .4);
+            @Log
             public static final ProfiledPIDController ROT_PID_CONTROLLER = new ProfiledPIDController(.13, 0, .39,
                     ROT_PROFILE);
             // DRIVING DEFAULT IS 5

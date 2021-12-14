@@ -24,6 +24,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import io.github.oblarg.oblog.Loggable;
+import io.github.oblarg.oblog.annotations.Config;
 import io.github.oblarg.oblog.annotations.Log;
 
 public class DriveSubsystem extends SubsystemBase implements Loggable {
@@ -33,7 +34,6 @@ public class DriveSubsystem extends SubsystemBase implements Loggable {
          * This can be reduced to cap the robot's maximum speed. Typically, this is
          * useful during initial testing of the robot.
  */
-        @Log
         public static final double MAX_VOLTAGE = Constants.swerve.MAX_VOLTAGE;
         // The formula for calculating the theoretical maximum velocity is:
         // <Motor free speed RPM> / 60 * <Drive reduction> * <Wheel diameter meters> *
@@ -49,7 +49,6 @@ public class DriveSubsystem extends SubsystemBase implements Loggable {
          * This is a measure of how fast the robot should be able to drive in a straight
          * line.
  */
-        @Log
         public static final double MAX_VELOCITY_METERS_PER_SECOND = Constants.swerve.MAX_VEL_METERS;
         /**
          * The maximum angular velocity of the robot in radians per second.
@@ -58,7 +57,6 @@ public class DriveSubsystem extends SubsystemBase implements Loggable {
          */
         // Here we calculate the theoretical maximum angular velocity. You can also
 // replace this with a measured amount.
-        @Log
         public static final double MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND = Constants.swerve.MAX_ANG_VEL_RAD;
 
         private final SwerveDriveKinematics m_kinematics = new SwerveDriveKinematics(
@@ -96,9 +94,9 @@ public class DriveSubsystem extends SubsystemBase implements Loggable {
                         Constants.auto.follower.ROT_PID_CONTROLLER);
 
         public static Translation2d m_CCR = new Translation2d();
-        @Log
+
         private static boolean brakeMode = Constants.swerve.brakeModeOn;
-        @Log
+
         private static boolean fieldRelative = Constants.swerve.feildRelativeOn;
         
         public DriveSubsystem() {
@@ -314,7 +312,7 @@ m_backRightModule.set(states[3].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_S
 		return brakeMode;
         }
         
-        
+        @Config
         /** 
          * @param x
          */
@@ -322,7 +320,7 @@ m_backRightModule.set(states[3].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_S
                 fieldRelative = x;
         }
 
-        
+        @Config
         /** 
          * @param x
          */
