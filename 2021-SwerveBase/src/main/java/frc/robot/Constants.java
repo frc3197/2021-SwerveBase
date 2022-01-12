@@ -76,6 +76,9 @@ public final class Constants implements Loggable {
         public static final double MAX_ANG_ACCEL = 8 * Math.PI;
         public static final boolean feildRelativeOn = true;
         public static final boolean brakeModeOn = false;
+        public static final double rotLimVal = 0;
+        public static final double yLimVal = 0;
+        public static final double xLimVal = 0;
         
 
     }
